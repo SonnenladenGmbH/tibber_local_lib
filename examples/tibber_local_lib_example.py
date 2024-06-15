@@ -1,10 +1,10 @@
 from tibber_local_lib import SMLDecoder
 
 password = "XXXX-XXXX" # 'XXXX-XXXX' from your QR-Code
-url = "http://tibber-host.fritz.box/data.json?node_id=1" # change the hostname or replace it with your IP
+tibber_pulse_host = "tibber-host.fritz.box" # change the hostname or replace it with your IP
 auth = ('admin', password)
 
-tibber_pulse = SMLDecoder(url, auth)
+tibber_pulse = SMLDecoder(tibber_pulse_host, auth)
 
 meter_id = tibber_pulse.fetch_meter_id()
 print(f'Device ID: {meter_id}')
