@@ -30,7 +30,7 @@ pip install tibber_local_lib
 
 1. **Configure the Bridge**:
    - Power off the bridge twice in 2-second intervals and wait for the LED to light up green.
-   - Connect to the bridge's WiFi using the noted password and navigate to the following URL in your browser: `http://tibber_bridge/data.json?node_id=1`. You may need to replace `tibber_bridge` with the correct hostname or IP address.
+   - Connect to the bridge's WiFi using the noted password and navigate to the following URL in your browser: `http://tibber-host.fritz.box/`. You need to replace `tibber-host.fritz.box` with the correct hostname or IP address.
    - Log in with the username `admin` and the noted password. You will be presented with a web dashboard.
    - Navigate to the `params` page and locate `webserver-force-enable`.
    - Set `webserver-force-enable` to `true` under the `params` tab, then save the changes and click `Store params to flash` at the bottom of the page.
