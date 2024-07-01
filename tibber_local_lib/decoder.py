@@ -16,7 +16,7 @@ class SMLDecoder:
             print(f"Failed to fetch data: {e}")
             return None
 
-    def decode_data(self, data):
+    def decode_sml_data(self, data):
         if data is None:
             return None
 
@@ -30,62 +30,64 @@ class SMLDecoder:
         obis_values = sml_frame.get_obis()
         return obis_values
 
+    def fetch_all_meter_data(self):
+        data = self.fetch_data()
+        obis_values = self.decode_sml_data(data)
+        if obis_values is None:
+            return None
+        return obis_values # returns all available meter data
+
     def fetch_live_consumption(self):
         data = self.fetch_data()
-        obis_values = self.decode_data(data)
+        obis_values = self.decode_sml_data(data)
         if obis_values is None:
             return None
 
         for entry in obis_values:
             if entry.obis == '0100100700ff':  # OBIS code for current power (W)
-                return int(entry.value) / 10
+                scaler = getattr(entry, 'scaler', 0)  # Default scaler is 0 if not provided
+                return int(entry.value) * (10 ** scaler)
 
         return None
 
-    def fetch_total_consumption(self):
+    def fetch_total_energy_import(self):
         data = self.fetch_data()
-        obis_values = self.decode_data(data)
+        obis_values = self.decode_sml_data(data)
         if obis_values is None:
             return None
 
         for entry in obis_values:
             if entry.obis == '0100010800ff':  # OBIS code for total consumption (Wh)
-                return int(entry.value) / 10
+                scaler = getattr(entry, 'scaler', 0)  # Default scaler is 0 if not provided
+                return int(entry.value) * (10 ** scaler)
 
         return None
 
-    def fetch_tariff1_consumption(self):
+    def fetch_total_energy_export(self):
         data = self.fetch_data()
-        obis_values = self.decode_data(data)
+        obis_values = self.decode_sml_data(data)
         if obis_values is None:
             return None
 
         for entry in obis_values:
-            if entry.obis == '0100010801ff':  # OBIS code for tariff 1 consumption (Wh)
-                return int(entry.value) / 10
+            if entry.obis == '0100020800ff':  # OBIS code for total consumption (Wh)
+                scaler = getattr(entry, 'scaler', 0)  # Default scaler is 0 if not provided
+                return int(entry.value) * (10 ** scaler)
 
         return None
 
-    def fetch_tariff2_consumption(self):
-        data = self.fetch_data()
-        obis_values = self.decode_data(data)
-        if obis_values is None:
-            return None
-
-        for entry in obis_values:
-            if entry.obis == '0100010802ff':  # OBIS code for tariff 2 consumption (Wh)
-                return int(entry.value) / 10
-
-        return None
 
     def fetch_meter_id(self):
         data = self.fetch_data()
-        obis_values = self.decode_data(data)
+        obis_values = self.decode_sml_data(data)
         if obis_values is None:
             return None
 
         for entry in obis_values:
-            if entry.obis == '0100000009ff':  # OBIS code for current power (W)
+            if entry.obis == '0100000009ff':  # OBIS code for meter ID
+                return entry.value
+
+            elif entry.obis == '0100600100ff':  # alternative OBIS code for meter ID
                 return entry.value
 
         return None

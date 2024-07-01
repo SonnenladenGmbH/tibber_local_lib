@@ -39,40 +39,62 @@ pip install tibber_local_lib
 
 For more instructions with some pictures, visit [the78mole.de](https://the78mole.de/doing-the-undone-decoding-sml-or-hacking-the-tibber-raw-data).
 
-## Usage
+## Usage | Examples:
 
 ```python
 from tibber_local_lib import SMLDecoder
 
-password = "XXXX-XXXX" # 'XXXX-XXXX' from your QR-Code
+password = "XXX-XXX" # 'XXXX-XXXX' from your QR-Code
 tibber_pulse_host = "tibber-host.fritz.box" # change the hostname or replace it with your IP
 auth = ('admin', password)
 
 tibber_pulse = SMLDecoder(tibber_pulse_host, auth)
 
 meter_id = tibber_pulse.fetch_meter_id()
-print(f'Device ID: {meter_id}')
+print(f'Device ID: {meter_id}') # Output: meter ID
 
 consumption = tibber_pulse.fetch_live_consumption()
 print(f'Current Power (W): {consumption}')  # Output: total live power in W
 
-total_consumption = tibber_pulse.fetch_total_consumption()
-print(f'Total Consumption (Wh): {total_consumption}')  # Output: total consumption in Wh
+total_import = tibber_pulse.fetch_total_energy_import()
+print(f'Total Energy Import (Wh): {total_import}')  # Output: total energy imported / consumption in Wh | 1.8.0
 
-tariff1_consumption = tibber_pulse.fetch_tariff1_consumption()
-print(f'Tariff 1 Consumption (Wh): {tariff1_consumption}')  # Output: tariff 1 consumption in Wh
-
-tariff2_consumption = tibber_pulse.fetch_tariff2_consumption()
-print(f'Tariff 2 Consumption (Wh): {tariff2_consumption}')  # Output: tariff 2 consumption in Wh
+total_export = tibber_pulse.fetch_total_energy_export()
+print(f'Total Energy Export (Wh): {total_export}')  # Output: total energy exported to the grid in Wh | 2.8.0
 ```
 ```
-Device ID: 0901454d41200099e91f
-Current Power (W): 1530.2
-Total Consumption (Wh): 19311451.7
-Tariff 1 Consumption (Wh): 19311451.7
-Tariff 2 Consumption (Wh): 0.0
-
+Device ID: 0a01454d4800009f3XXX
+Current Power (W): 50
+Total Energy Import (Wh): 3983179.1
+Total Energy Export (Wh): 4814912.100000001
 ```
+
+## Handling Different Meter Data Reports
+
+Meters can vary significantly in the types of data they report. Some meters provide extensive details such as phase voltage, current, and more. To accommodate these variations and help you discover the specific data your meter can report, we have added a function called fetch_all_meter_data().
+
+```python
+from tibber_local_lib import SMLDecoder
+
+password = "XXX-XXX" # 'XXXX-XXXX' from your QR-Code
+tibber_pulse_host = "tibber-host.fritz.box" # change the hostname or replace it with your IP
+auth = ('admin', password)
+
+tibber_pulse = SMLDecoder(tibber_pulse_host, auth)
+
+# Fetch all data from your SML meter as obis values:
+all_meter_data = tibber_pulse.fetch_all_meter_data()
+print(f'All meter data: {all_meter_data}') # Output: all obis_values available from the meter
+```
+```
+All meter data: [<obis: 010060320101, value: EMH>, <obis: 0100600100ff, value: 0a01454d4800009f3XXX>, <obis: 0100010800ff, status: 1839364, val_time: 56769492, unit: 30, scaler: -1, value: 39831791>, <obis: 0100020800ff, val_time: 56769492, unit: 30, scaler: -1, value: 48149121>, <obis: 0100100700ff, unit: 27, scaler: 0, value: 50>]
+```
+
+This function retrieves and decodes the complete set of data from your meter, giving you a comprehensive view of all the available metrics. This enables you to explore and utilize the full capabilities of your specific meter.
+
+## Contributing to Meter Data Decoding
+
+We strive to continuously improve our library and accommodate the diverse range of meters available. If you discover new values or metrics reported by your meter that are not currently decoded by our functions, we welcome your contributions! Sharing these insights helps us enhance the library for everyone. Feel free to submit a pull request or open an issue on our GitHub repository with the details of the new values you have identified. Together, we can make this tool even more powerful and versatile.
 
 ## License
 
