@@ -3,13 +3,14 @@ from smllib import SmlStreamReader
 
 
 class SMLDecoder:
-    def __init__(self, url, auth):
+    def __init__(self, url, auth, nodeID=1):
         self.url = url
         self.auth = auth
+        self.nodeId = nodeID
 
     def fetch_data(self):
         try:
-            response = requests.get(f"http://{self.url}/data.json?node_id=1", auth=self.auth)
+            response = requests.get(f"http://{self.url}/data.json?node_id={self.nodeId}", auth=self.auth)
             response.raise_for_status()
             return response.content
         except requests.exceptions.RequestException as e:

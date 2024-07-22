@@ -34,6 +34,7 @@ pip install tibber_local_lib
    - Log in with the username `admin` and the noted password. You will be presented with a web dashboard.
    - Navigate to the `params` page and locate `webserver-force-enable`.
    - Set `webserver-force-enable` to `true` under the `params` tab, then save the changes and click `Store params to flash` at the bottom of the page.
+   - Remember your nodeId: `http://tibber-host.fritz.box/nodes/` | default is 1
    - Power cycle the bridge.
    - Tibber will still be able to fetch data from the bridge, and now you also have local access 👍.
 
@@ -46,9 +47,10 @@ from tibber_local_lib import SMLDecoder
 
 password = "XXX-XXX" # 'XXXX-XXXX' from your QR-Code
 tibber_pulse_host = "tibber-host.fritz.box" # change the hostname or replace it with your IP
+nodeId = 1 # find your nodeId: http://tibber-host.fritz.box/nodes/ | default is 1
 auth = ('admin', password)
 
-tibber_pulse = SMLDecoder(tibber_pulse_host, auth)
+tibber_pulse = SMLDecoder(tibber_pulse_host, auth, nodeId)
 
 meter_id = tibber_pulse.fetch_meter_id()
 print(f'Device ID: {meter_id}') # Output: meter ID
@@ -78,9 +80,10 @@ from tibber_local_lib import SMLDecoder
 
 password = "XXX-XXX" # 'XXXX-XXXX' from your QR-Code
 tibber_pulse_host = "tibber-host.fritz.box" # change the hostname or replace it with your IP
+nodeId = 1 # find your nodeId: http://tibber-host.fritz.box/nodes/ | default is 1
 auth = ('admin', password)
 
-tibber_pulse = SMLDecoder(tibber_pulse_host, auth)
+tibber_pulse = SMLDecoder(tibber_pulse_host, auth, nodeId)
 
 # Fetch all data from your SML meter as obis values:
 all_meter_data = tibber_pulse.fetch_all_meter_data()
