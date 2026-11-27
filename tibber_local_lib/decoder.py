@@ -10,7 +10,7 @@ class SMLDecoder:
 
     def fetch_data(self):
         try:
-            response = requests.get(f"http://{self.url}/data.json?node_id={self.nodeId}", auth=self.auth)
+            response = requests.get(f"http://{self.url}/node_data.json?node_id={self.nodeId}", auth=self.auth)
             response.raise_for_status()
             return response.content
         except requests.exceptions.RequestException as e:
